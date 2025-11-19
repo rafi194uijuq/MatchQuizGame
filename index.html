@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="Permainan matematika edukasi terbaik untuk anak SD - seru, cantik, dan interaktif!" />
+    <title>Petualangan Matematika</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🫧</text></svg>">
+</head>
+<body>
+    <audio id="bgMusic" src="backsound.mp3" loop preload="auto"></audio>
+    <audio id="winSound" src="win.mp3" preload="auto"></audio>
+    <audio id="timeupSound" src="timeup.mp3" preload="auto"></audio>
+    <audio id="hintSound" src="hint.mp3" preload="auto"></audio>
+    <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
+    <div id="bgOverlay" class="bg-overlay"></div>
+
+    <div class="particles">
+        <div class="bubble bubble-1"></div>
+        <div class="bubble bubble-2"></div>
+        <div class="bubble bubble-3"></div>
+        <div class="bubble bubble-4"></div>
+        <div class="bubble bubble-5"></div>
+        <div class="bubble bubble-6"></div>
+        <div class="bubble bubble-7"></div>
+    </div>
+
+    <div id="gameContainer" class="container">
+        <div id="welcomeScreen" class="screen active">
+            <div class="welcome-content">
+                <h1 class="game-title">
+                    <span class="title-part">Petualangan</span>
+                    <span class="title-part highlight">Matematika</span>
+                </h1>
+                <p class="subtitle">Uji kemampuan berhitungmu dengan cepat dan tepat!</p>
+                <div class="action-buttons">
+                    <button id="startBtn" class="btn glow-btn">Mulai Petualangan!</button>
+                    <button id="infoBtn" class="btn secondary-btn">Info Kelompok</button>
+                </div>
+                <button id="musicToggle" class="music-btn">🔊</button>
+            </div>
+        </div>
+
+        <div id="categoryScreen" class="screen centered-screen">
+            <h2 class="screen-title">Pilih Tantanganmu!</h2>
+            <div class="category-grid grid-2x2">
+                <button class="category-card" data-category="addition">
+                    <div class="icon">➕</div>
+                    <h3>Penjumlahan</h3>
+                    <p>Menambah angka</p>
+                </button>
+                <button class="category-card" data-category="subtraction">
+                    <div class="icon">➖</div>
+                    <h3>Pengurangan</h3>
+                    <p>Mengurangi angka</p>
+                </button>
+                <button class="category-card" data-category="multiplication">
+                    <div class="icon">✖️</div>
+                    <h3>Perkalian</h3>
+                    <p>Mengalikan angka</p>
+                </button>
+                <button class="category-card" data-category="division">
+                    <div class="icon">➗</div>
+                    <h3>Pembagian</h3>
+                    <p>Membagi rata</p>
+                </button>
+            </div>
+        </div>
+
+        <div id="difficultyScreen" class="screen difficulty-screen-layout centered-screen">
+            <h2 class="screen-title">Pilih Level Kesulitan</h2>
+            <div class="difficulty-grid">
+                <button class="difficulty-card small-card" data-difficulty="easy">
+                    <div class="stars">⭐</div>
+                    <h3>Mudah</h3>
+                    <p>10 Soal • 5 Menit</p>
+                </button>
+                <button class="difficulty-card small-card" data-difficulty="medium">
+                    <div class="stars">⭐⭐</div>
+                    <h3>Sedang</h3>
+                    <p>20 Soal • 8 Menit</p>
+                </button>
+                <button class="difficulty-card large-card" data-difficulty="hard">
+                    <div class="stars">⭐⭐⭐</div>
+                    <h3>Sulit</h3>
+                    <p>30 Soal • 12 Menit</p>
+                </button>
+            </div>
+       
+        </div>
+
+        <div id="quizScreen" class="screen quiz-screen-layout">
+            <div class="quiz-header">
+                <div class="status-group">
+                    <div class="timer-box">
+                        <span class="timer-icon">⏰</span>
+                        <span id="timer" class="timer">5:00</span>
+                    </div>
+                    <span id="scoreDisplay" class="score badge">Skor: 0</span>
+                </div>
+                <div class="info-group">
+                    <span id="categoryDisplay" class="badge category"></span>
+                    <span id="difficultyDisplay" class="badge difficulty"></span>
+                    <button id="hintBtn" class="hint-btn" title="Petunjuk">💡 <span id="hintCount">3</span></button>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progressText">Soal 1 dari 10</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="fill"></div>
+                </div>
+            </div>
+
+            <div class="question-section">
+                <div class="question-center-wrapper"> 
+                    <div class="question-highlight">
+                        <h2 id="questionText" class="question">2 + 2 = ?</h2>
+                    </div>
+                </div>
+                
+                <div class="answers-grid grid-2x2" id="answersGrid"></div>
+            </div>
+        </div>
+
+        <div id="resultsScreen" class="screen centered-screen">
+            <div class="results-content">
+                <h2 id="resultsTitle" class="results-title">Luar Biasa!</h2>
+                <div class="score-circle">
+                    <div class="score-inner">
+                        <span id="finalScore" class="big-score">0%</span>
+                        <span class="total">AKURASI</span>
+                    </div>
+                </div>
+                <p id="scoreMessage" class="message">Kamu bintang matematika!</p>
+
+                <div class="review-box">
+                    <h3>Review Jawaban:</h3>
+                    <div id="answersList" class="review-list"></div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="playAgainBtn" class="btn glow-btn">Main Lagi!</button>
+                    <button id="changeCategory" class="btn secondary-btn">Ganti Tantangan</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="timeupScreen" class="screen centered-screen">
+            <div class="timeup-content">
+                <h2 class="timeup-title">⏰ Waktu Habis!</h2>
+                <p class="timeup-msg">Tapi kamu tetap hebat!</p>
+                <div class="score-circle">
+                    <div class="score-inner">
+                        <span id="timeupScore" class="big-score">0%</span>
+                        <span class="total">AKURASI</span>
+                    </div>
+                </div>
+                <div class="review-box">
+                    <h3>Tinjau Jawaban:</h3>
+                    <div id="timeupAnswersList" class="review-list"></div>
+                </div>
+                <div class="action-buttons">
+                    <button id="tryAgainBtn" class="btn glow-btn">Coba Lagi!</button>
+                    <button id="backToStart" class="btn secondary-btn">Ke Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="groupModal" class="modal">
+        <div class="modal-card">
+            <button class="close-btn">✕</button>
+            <h2>👩‍💻 Tim Pengembang 🧑‍💻</h2>
+            <div class="team-grid">
+                <div class="member">
+                    <div class="avatar">👨</div>
+                    <div class="info">
+                        <h3>Muhammad Rafi</h3>
+                        <p>Siswa RPL SMKN 3 Tuban</p>
+                    </div>
+                </div>
+                <div class="member">
+                    <div class="avatar">👧</div>
+                    <div class="info">
+                        <h3>Miratus Sofi Iya</h3>
+                        <p>Siswi RPL SMKN 3 Tuban</p>
+                    </div>
+                </div>
+            </div>
+            <p class="footer">Dibuat untuk meningkatkan minat matematika anak Indonesia.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
